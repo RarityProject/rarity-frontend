@@ -58,14 +58,15 @@ function AppBar(): JSX.Element {
 
     function market(): JSX.Element {
         return (
-            <Link
+            <a
+                target="_blank"
                 href="https://paintswap.finance/nfts/collections/0xc73e1237a5a9ba5b0f790b6580f32d04a727dc19"
-                passHref={true}
+                rel="noopener noreferrer"
             >
                 <div className="cursor-pointer hover:border-white border-transparent border-2 rounded-xl py-1 px-2 mx-1">
                     <h2>{i18n._(t`market`)}</h2>
                 </div>
-            </Link>
+            </a>
         )
     }
 
@@ -94,7 +95,7 @@ function AppBar(): JSX.Element {
                                             {summoners()}
                                             {play()}
                                             {analytics()}
-                                            {names()}
+                                            {/* {names()} */}
                                             {market()}
                                             {account && (
                                                 <button
