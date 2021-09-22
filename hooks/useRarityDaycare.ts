@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { utils } from 'ethers'
 import { useRarityDaycareContract } from './useContract'
 
-const feeUnit = 0.06
+const feeUnit = 0.1
 
 interface DailycareInterface {
     registerDaycare: (ids: number[], days: number) => Promise<void>
