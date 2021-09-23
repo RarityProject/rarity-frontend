@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
-import { useRarityCellarContract, useRarityContract } from './useContract'
-import { utils } from 'ethers'
+import { useRarityCellarContract } from './useContract'
 
 interface CellarInterface {
     adventure_cellar: (id: number) => Promise<void>
     material_allowance: (from: number, spender: number) => Promise<number>
     material_approve: (from: number, spender: number, amount: number) => Promise<void>
+    material_balance: (id: number) => Promise<number>
+    transferFrom: (executor: number, from: number, to: number, amount: string) => Promise<void>
 }
 
 export default function useRarityCellar(): CellarInterface {
@@ -55,5 +56,34 @@ export default function useRarityCellar(): CellarInterface {
         [cellar]
     )
 
-    return { adventure_cellar, material_allowance, material_approve }
+    const material_balance = useCallback(
+        async (id: number): Promise<number> => {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const balance = await cellar?.balanceOf(id)
+                    resolve(parseInt(balance.toString()))
+                } catch (e) {
+                    reject()
+                }
+            })
+        },
+        [cellar]
+    )
+
+    const transferFrom = useCallback(
+        async (executor: number, from: number, to: number, amount: string): Promise<void> => {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const tx = await cellar?.transferFrom(executor, from, to, amount)
+                    await tx.wait()
+                    resolve()
+                } catch (e) {
+                    reject()
+                }
+            })
+        },
+        [cellar]
+    )
+
+    return { adventure_cellar, material_allowance, material_approve, material_balance, transferFrom }
 }

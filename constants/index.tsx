@@ -1,3 +1,6 @@
+import Image from 'next/image'
+import React from 'react'
+
 export const NetworkContextName = 'NETWORK'
 
 export enum ChainId {
@@ -24,8 +27,33 @@ export const RARITY_CELLAR_ADDRESS = '0x2A0F1cB17680161cF255348dDFDeE94ea8Ca196A
 
 export const RARITY_CRAFTING_ADDRESS = '0xf41270836dF4Db1D28F7fd0935270e3A603e78cC'
 
+export const RARITY_NAMES_ADDRESS = '0xc73e1237a5a9ba5b0f790b6580f32d04a727dc19'
+
+export const RARITY_PACK_ADDRESS = '0xb3b96df217e88ee51513c0abc036c3d0fc885eaa'
+
 export const RARITY_CRAFTING_SUMMONER = 1758709
 
-export const CRAFTING_ALLOWANCE = 100000
+export const CRAFTING_ALLOWANCE = 4294967295
+
+export const RARITY_NAMES_SUMMONER = 1672965
 
 export const BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD'
+
+export interface CoinData {
+    name: string
+    image: JSX.Element
+    unit: 'ether' | 'wei'
+}
+
+export const GAME_COINS: { [k: string]: CoinData } = {
+    gold: {
+        name: 'GOLD',
+        image: <Image src="/img/coins/gold.png" width={50} height={40} />,
+        unit: 'ether',
+    },
+    materials: {
+        name: 'MATERIALS',
+        image: <Image src="/img/coins/material.png" width={40} height={40} />,
+        unit: 'wei',
+    },
+}
