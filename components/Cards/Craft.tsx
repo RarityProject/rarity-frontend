@@ -14,6 +14,7 @@ import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 import useRarityCrafting from '../../hooks/useRarityCrafting'
 import { MinusIcon, PlusIcon } from '@heroicons/react/solid'
 import CraftResultModal from '../Modal/modals/Craft'
+import { utils, BigNumber } from 'ethers'
 
 enum View {
     GOODS,
@@ -68,7 +69,10 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
         const matAllowance = await material_allowance(summoner.id, RARITY_CRAFTING_SUMMONER)
         const global = await isApprovedForAll(account, RARITY_CRAFTING_ADDRESS)
         setGlobalApproval(global)
-        setApproval({ gold: goldAllowance >= CRAFTING_ALLOWANCE, material: matAllowance >= CRAFTING_ALLOWANCE })
+        setApproval({
+            gold: goldAllowance >= CRAFTING_ALLOWANCE,
+            material: matAllowance >= CRAFTING_ALLOWANCE,
+        })
     }, [gold_allowance, material_allowance, summoner, account, isApprovedForAll])
 
     useEffect(() => {
@@ -247,18 +251,18 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 w-full px-4 py-2 divide-white divide-y-2 overflow-scroll overflow-hidden h-60 mb-2">
+                                    <div className="grid grid-cols-1 w-full px-4 py-2 overflow-scroll overflow-hidden h-60 mb-2">
                                         {view === View.GOODS && (
-                                            <div className="divide-white divide-y-2">
+                                            <div>
                                                 {Object.keys(ITEMS[ITEM_TYPE.GOOD]).map((k) => {
                                                     {
                                                         return (
-                                                            <div key={k}>
+                                                            <div key={k} className="my-2">
                                                                 <button
                                                                     onClick={() =>
                                                                         openModal(ITEMS[ITEM_TYPE.GOOD][k], k, false)
                                                                     }
-                                                                    className="uppercase p-2 text-left hover:bg-background-contrast w-full"
+                                                                    className="uppercase p-1 px-3 text-left w-full border-black border-opacity-30 border shadow"
                                                                 >
                                                                     {ITEMS[ITEM_TYPE.GOOD][k].name}
                                                                 </button>
@@ -269,16 +273,16 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
                                             </div>
                                         )}
                                         {view === View.WEAPONS && (
-                                            <div className="divide-white divide-y-2">
+                                            <div>
                                                 {Object.keys(ITEMS[ITEM_TYPE.WEAPON]).map((k) => {
                                                     {
                                                         return (
-                                                            <div key={k}>
+                                                            <div key={k} className="my-2">
                                                                 <button
                                                                     onClick={() =>
                                                                         openModal(ITEMS[ITEM_TYPE.WEAPON][k], k, false)
                                                                     }
-                                                                    className="uppercase p-2 text-left hover:bg-background-contrast w-full"
+                                                                    className="uppercase p-1 px-3 text-left w-full border-black border-opacity-30 border shadow"
                                                                 >
                                                                     {ITEMS[ITEM_TYPE.WEAPON][k].name}
                                                                 </button>
@@ -289,16 +293,16 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
                                             </div>
                                         )}
                                         {view === View.ARMORS && (
-                                            <div className="divide-white divide-y-2">
+                                            <div>
                                                 {Object.keys(ITEMS[ITEM_TYPE.ARMOR]).map((k) => {
                                                     {
                                                         return (
-                                                            <div key={k}>
+                                                            <div key={k} className="my-2">
                                                                 <button
                                                                     onClick={() =>
                                                                         openModal(ITEMS[ITEM_TYPE.ARMOR][k], k, false)
                                                                     }
-                                                                    className="uppercase p-2 text-left hover:bg-background-contrast w-full"
+                                                                    className="uppercase p-1 px-3 text-left w-full border-black border-opacity-30 border shadow"
                                                                 >
                                                                     {ITEMS[ITEM_TYPE.ARMOR][k].name}
                                                                 </button>
@@ -324,7 +328,12 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
                                             <div className="py-1 text-center w-2/3">
                                                 <p>{summoner.materials.balance}</p>
                                             </div>
-                                            <Image src="/img/material.png" width={30} height={30} alt="material" />
+                                            <Image
+                                                src="/img/coins/material.png"
+                                                width={30}
+                                                height={30}
+                                                alt="material"
+                                            />
                                         </div>
                                     </div>
                                     <div className="uppercase mt-2">
@@ -369,12 +378,12 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
                                                 {summoner.gold.balance >= item.cost ? (
                                                     <span className="bg-green border-white border-2 rounded-lg p-1">
                                                         {' '}
-                                                        {summoner.gold.balance}/{item.cost}
+                                                        {item.cost}/{summoner.gold.balance}
                                                     </span>
                                                 ) : (
                                                     <span className="bg-red border-white border-2 rounded-lg p-1">
                                                         {' '}
-                                                        {summoner.gold.balance}/{item.cost}
+                                                        {item.cost}/{summoner.gold.balance}
                                                     </span>
                                                 )}
                                             </p>
@@ -388,7 +397,7 @@ function SummonerCraftCard({ summoner }: { summoner: SummonerFullData }): JSX.El
                                                 ) : (
                                                     <span className="bg-red border-white border-2 rounded-lg p-1">
                                                         {' '}
-                                                        {summoner.base._xp}/250
+                                                        250/{summoner.base._xp}
                                                     </span>
                                                 )}
                                             </p>
